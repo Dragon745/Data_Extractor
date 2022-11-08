@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "AY23x4hDRGjctQNZsyoR6CdgQTTHcETVmqc3LMy0r6jo9u6sflvGneEQlheQKzj0LL/8ewC2oj/PUAo7cEzhmA==",
+  "success": true,
+  "projectFilePath": "D:\\Users\\conta\\Documents\\cAlgo\\Sources\\Robots\\Data_Extractor\\Data_Extractor\\Data_Extractor.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\conta\\.nuget\\packages\\ctrader.automate\\1.0.4\\ctrader.automate.1.0.4.nupkg.sha512"
+  ],
+  "logs": []
+}
