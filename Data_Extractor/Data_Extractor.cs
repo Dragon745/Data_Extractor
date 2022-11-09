@@ -14,22 +14,15 @@ namespace cAlgo.Robots
     {
         [Parameter(DefaultValue = "7")]
         public int NoHistoryCandles { get; set; }
-        
-
-
-         
         [Parameter("Select Folder", DefaultValue = "D:\\Users\\conta\\Documents\\cTrader\\Data\\")]
         public string Folder { get; set; }
-        // Get EMA
         private ExponentialMovingAverage _ema;
-        
 
         protected override void OnStart()
         {
             // To learn more about cTrader Automate visit our Help Center:
             // https://help.ctrader.com/ctrader-automate
             Folder = Folder + "\\" + Symbol.Name + "\\";
-
             _ema = Indicators.ExponentialMovingAverage(Bars.ClosePrices, 20);
         }
 
@@ -40,7 +33,6 @@ namespace cAlgo.Robots
 
         protected override void OnBar()
         {
-            
             double[] data = new double[NoHistoryCandles];
             int i = 1;
             while (i < (NoHistoryCandles+1))
@@ -49,9 +41,7 @@ namespace cAlgo.Robots
                 data[(i-1)]     = Math.Round((Bars.ClosePrices.Last(i) - Bars.OpenPrices.Last(i)) / Symbol.PipValue, 1);
                 i++;
             }
-
             //if path not present create it
-
             if (!System.IO.Directory.Exists(Folder))
             {
                 System.IO.Directory.CreateDirectory(Folder);
@@ -59,9 +49,6 @@ namespace cAlgo.Robots
             ////write data to CSV
             string FileNameX = Folder + "X.csv";
             string FileNameY = Folder + "Y.csv";
-
-           
-
             using (System.IO.StreamWriter file = new System.IO.StreamWriter(FileNameX, true))
             {
                 file.WriteLine(data);
@@ -72,8 +59,6 @@ namespace cAlgo.Robots
             //    file.WriteLine(CandleBody1);
             //    file.Close();
             //}
-            
-
         }
 
         protected override void OnStop()
