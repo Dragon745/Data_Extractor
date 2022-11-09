@@ -1,0 +1,12 @@
+D:\Users\conta\Documents\cAlgo\Sources\Robots\Data_Extractor\Data_Extractor\bin\Debug\net6.0\Data_Extractor.deps.json
+D:\Users\conta\Documents\cAlgo\Sources\Robots\Data_Extractor\Data_Extractor\bin\Debug\net6.0\Data_Extractor.dll
+D:\Users\conta\Documents\cAlgo\Sources\Robots\Data_Extractor\Data_Extractor\bin\Debug\net6.0\Data_Extractor.pdb
+D:\Users\conta\Documents\cAlgo\Sources\Robots\Data_Extractor\Data_Extractor\obj\Debug\net6.0\Data_Extractor.csproj.AssemblyReference.cache
+D:\Users\conta\Documents\cAlgo\Sources\Robots\Data_Extractor\Data_Extractor\obj\Debug\net6.0\Data_Extractor.GeneratedMSBuildEditorConfig.editorconfig
+D:\Users\conta\Documents\cAlgo\Sources\Robots\Data_Extractor\Data_Extractor\obj\Debug\net6.0\Data_Extractor.AssemblyInfoInputs.cache
+D:\Users\conta\Documents\cAlgo\Sources\Robots\Data_Extractor\Data_Extractor\obj\Debug\net6.0\Data_Extractor.AssemblyInfo.cs
+D:\Users\conta\Documents\cAlgo\Sources\Robots\Data_Extractor\Data_Extractor\obj\Debug\net6.0\Data_Extractor.csproj.CoreCompileInputs.cache
+D:\Users\conta\Documents\cAlgo\Sources\Robots\Data_Extractor\Data_Extractor\obj\Debug\net6.0\Data_Extractor.dll
+D:\Users\conta\Documents\cAlgo\Sources\Robots\Data_Extractor\Data_Extractor\obj\Debug\net6.0\refint\Data_Extractor.dll
+D:\Users\conta\Documents\cAlgo\Sources\Robots\Data_Extractor\Data_Extractor\obj\Debug\net6.0\Data_Extractor.pdb
+D:\Users\conta\Documents\cAlgo\Sources\Robots\Data_Extractor\Data_Extractor\obj\Debug\net6.0\ref\Data_Extractor.dll
