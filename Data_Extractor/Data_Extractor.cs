@@ -12,19 +12,25 @@ namespace cAlgo.Robots
     [Robot(AccessRights = AccessRights.FullAccess)]
     public class Data_Extractor : Robot
     {
-        [Parameter(DefaultValue = "Hello world!")]
-        public string Message { get; set; }
+        [Parameter(DefaultValue = "7")]
+        public int NoHistoryCandles { get; set; }
+        
+
 
          
-        [Parameter("Select Folder", DefaultValue = "D:\\Users\\conta\\Documents\\cTrader\\Data")]
+        [Parameter("Select Folder", DefaultValue = "D:\\Users\\conta\\Documents\\cTrader\\Data\\")]
         public string Folder { get; set; }
+        // Get EMA
+        private ExponentialMovingAverage _ema;
+        
 
         protected override void OnStart()
         {
             // To learn more about cTrader Automate visit our Help Center:
             // https://help.ctrader.com/ctrader-automate
+            Folder = Folder + "\\" + Symbol.Name + "\\";
 
-            Print(Message);
+            _ema = Indicators.ExponentialMovingAverage(Bars.ClosePrices, 20);
         }
 
         protected override void OnTick()
@@ -34,15 +40,15 @@ namespace cAlgo.Robots
 
         protected override void OnBar()
         {
-
-            double CandleBody1 = Math.Round((Bars.ClosePrices.Last(1) - Bars.OpenPrices.Last(1)) / Symbol.PipValue, 1);
-            double CandleBody2 = Math.Round((Bars.ClosePrices.Last(2) - Bars.OpenPrices.Last(2)) / Symbol.PipValue, 1);
-            double CandleBody3 = Math.Round((Bars.ClosePrices.Last(3) - Bars.OpenPrices.Last(3)) / Symbol.PipValue, 1);
-            double CandleBody4 = Math.Round((Bars.ClosePrices.Last(4) - Bars.OpenPrices.Last(4)) / Symbol.PipValue, 1);
-            double CandleBody5 = Math.Round((Bars.ClosePrices.Last(5) - Bars.OpenPrices.Last(5)) / Symbol.PipValue, 1);
-            double CandleBody6 = Math.Round((Bars.ClosePrices.Last(6) - Bars.OpenPrices.Last(6)) / Symbol.PipValue, 1);
-            double CandleBody7 = Math.Round((Bars.ClosePrices.Last(7) - Bars.OpenPrices.Last(7)) / Symbol.PipValue, 1);
-
+            
+            double[] data = new double[NoHistoryCandles];
+            int i = 1;
+            while (i < (NoHistoryCandles+1))
+            {
+                //Add data to array
+                data[(i-1)]     = Math.Round((Bars.ClosePrices.Last(i) - Bars.OpenPrices.Last(i)) / Symbol.PipValue, 1);
+                i++;
+            }
 
             //if path not present create it
 
@@ -50,14 +56,24 @@ namespace cAlgo.Robots
             {
                 System.IO.Directory.CreateDirectory(Folder);
             }
-            //write data to CSV
-            string FileName = Folder + "\\" + Symbol.Name + "_" + TimeFrame.ToString() + ".csv";
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(FileName, true))
-            {
-                file.WriteLine(CandleBody7 + "," + CandleBody6 + "," + CandleBody5 + "," + CandleBody4 + "," + CandleBody3 + "," + CandleBody2 + "," + CandleBody1);
-            }
+            ////write data to CSV
+            string FileNameX = Folder + "X.csv";
+            string FileNameY = Folder + "Y.csv";
 
            
+
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(FileNameX, true))
+            {
+                file.WriteLine(data);
+                file.Close();
+            }
+            //using (System.IO.StreamWriter file = new System.IO.StreamWriter(FileNameY, true))
+            //{
+            //    file.WriteLine(CandleBody1);
+            //    file.Close();
+            //}
+            
+
         }
 
         protected override void OnStop()

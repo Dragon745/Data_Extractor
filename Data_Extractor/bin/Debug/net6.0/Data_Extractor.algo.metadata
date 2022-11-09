@@ -16,14 +16,17 @@
     "Clouds": [],
     "Parameters": [
       {
-        "DefaultValue": "Hello world!",
-        "ParameterType": "String",
-        "PropertyName": "Message",
-        "FriendlyName": "Message",
+        "MinValue": -2147483648,
+        "MaxValue": 2147483647,
+        "Step": 1,
+        "DefaultValue": 7,
+        "ParameterType": "Integer",
+        "PropertyName": "NoHistoryCandles",
+        "FriendlyName": "NoHistoryCandles",
         "GroupName": null
       },
       {
-        "DefaultValue": "D:\\Users\\conta\\Documents\\cTrader\\Data",
+        "DefaultValue": "D:\\Users\\conta\\Documents\\cTrader\\Data\\",
         "ParameterType": "String",
         "PropertyName": "Folder",
         "FriendlyName": "Select Folder",
