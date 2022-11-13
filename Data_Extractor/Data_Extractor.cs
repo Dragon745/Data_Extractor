@@ -49,16 +49,28 @@ namespace cAlgo.Robots
             ////write data to CSV
             string FileNameX = Folder + "X.csv";
             string FileNameY = Folder + "Y.csv";
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(FileNameX, true))
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(FileNameY, true))
             {
-                file.WriteLine(data);
+                file.WriteLine(data[0]);
                 file.Close();
             }
-            //using (System.IO.StreamWriter file = new System.IO.StreamWriter(FileNameY, true))
-            //{
-            //    file.WriteLine(CandleBody1);
-            //    file.Close();
-            //}
+            data[0] = Math.Round((Bars.OpenPrices.LastValue - _ema.Result.LastValue) / Symbol.PipValue, 1);
+   
+            i = data.Length - 1;
+
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(FileNameX, true))
+            {
+                while (i > -1)
+                {
+                    Print("i From Inside the Loop: " + i);
+                    Print("data From Inside the Loop: " + data[i]);
+                    file.Write(data[i] + ",");
+                    i--;
+                }
+                file.WriteLine();
+                file.Close();
+            }
+
         }
 
         protected override void OnStop()
