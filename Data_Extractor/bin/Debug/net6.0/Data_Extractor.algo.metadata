@@ -19,10 +19,20 @@
         "MinValue": -2147483648,
         "MaxValue": 2147483647,
         "Step": 1,
-        "DefaultValue": 7,
+        "DefaultValue": 8,
         "ParameterType": "Integer",
-        "PropertyName": "NoHistoryCandles",
-        "FriendlyName": "NoHistoryCandles",
+        "PropertyName": "HistoryNeeded",
+        "FriendlyName": "HistoryNeeded",
+        "GroupName": null
+      },
+      {
+        "MinValue": -1.7976931348623157E+308,
+        "MaxValue": 1.7976931348623157E+308,
+        "Step": 0.1,
+        "DefaultValue": 150.0,
+        "ParameterType": "Double",
+        "PropertyName": "StrandardGain",
+        "FriendlyName": "StrandardGain",
         "GroupName": null
       },
       {
