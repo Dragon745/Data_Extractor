@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using cAlgo.API;
@@ -23,7 +24,7 @@ namespace cAlgo.Robots
         private ExponentialMovingAverage _emaSlow;
         private ExponentialMovingAverage _emaFast;
         private RelativeStrengthIndex _rsi;
-
+        int i = 672;
         protected override void OnStart()
         {
             // To learn more about cTrader Automate visit our Help Center:
@@ -32,6 +33,19 @@ namespace cAlgo.Robots
             _emaSlow = Indicators.ExponentialMovingAverage(Bars.ClosePrices, 50);
             _emaFast = Indicators.ExponentialMovingAverage(Bars.ClosePrices, 5);
             _rsi = Indicators.RelativeStrengthIndex(Bars.ClosePrices, 10);
+            //if file exist empty the file
+            string FileName1 = Folder + "X.csv";
+            string FileName2 = Folder + "Y.csv";
+            if (System.IO.File.Exists(FileName1))
+            {
+                System.IO.File.WriteAllText(FileName1, string.Empty);
+                System.IO.File.WriteAllText(FileName1, "8, 7, 6, 5, 4, 3, 2, 1, RSI, EmaFast, EmaSlow, EmaCross, Trend" + Environment.NewLine);
+            }
+            if (System.IO.File.Exists(FileName2))
+            {
+                System.IO.File.WriteAllText(FileName2, string.Empty);
+                System.IO.File.WriteAllText(FileName2, "Trend" + Environment.NewLine);
+            }
 
         }
 
@@ -42,106 +56,114 @@ namespace cAlgo.Robots
 
         protected override void OnBar()
         {
-            int NoHistoryCandles = HistoryNeeded;
-            //Create a List of HistoryCandles Height
-            List<double> Data = new List<double>();
+            int NoHistoryCandles = HistoryNeeded + 8;
+            int DataCollection = CollectYData(CollectXData(NoHistoryCandles));
+            //Stop the Robot
+            //i--;
+            //if (i == 0)
+            //{
+            //    Stop();
+            //}
+        }
 
-            
-            //Add Data to List {With Name of List Data} Not to Confuse with the Word Data.
-            NoHistoryCandles = NoHistoryCandles + 8;
+        
+        //Method to Write Data to CSV File
+        public void WriteToFile(string FileName, List<double> Data)
+        {
+            //if path not present create it
+            if (!System.IO.Directory.Exists(Folder))
+            {
+                System.IO.Directory.CreateDirectory(Folder);
+            }
+            FileName = Folder + FileName + ".csv";
+            int i = Data.Count - 1;
+            using (System.IO.StreamWriter file = new System.IO.StreamWriter(FileName, true))
+                {
+                    while (i > -1)
+                    {
+                        if (i == 0)
+                        {
+                            file.Write(Data[i]);
+                        }
+                        else
+                        {
+                            file.Write(Data[i] + ",");
+                        }
+                        i--;
+                    }
+                    file.WriteLine();
+                    file.Close();
+                
+            }
+        }
+
+        
+        //Function to Collect X Data
+        public int CollectXData(int NoHistoryCandles)
+        {
+            List<double> Data = new List<double>();
             while (NoHistoryCandles > 8)
             {
                 //Add data to array
                 Data.Insert(0, Math.Round((Bars.ClosePrices.Last(NoHistoryCandles) - Bars.OpenPrices.Last(NoHistoryCandles)) / Symbol.PipValue, 1));
                 NoHistoryCandles--;
             }
-            
-            
-            //create a list with last 8 candles
-            List<double> HistoryMinMaxPrice = new List<double>();
-            while (NoHistoryCandles < 9 && NoHistoryCandles > 0)
-            {
-                HistoryMinMaxPrice.Add(Bars.HighPrices.Last(NoHistoryCandles));
-                HistoryMinMaxPrice.Add(Bars.LowPrices.Last(NoHistoryCandles));
-                NoHistoryCandles--;
-            }
-            //get the maximum value in list
-            double Max = HistoryMinMaxPrice.Max();
-            //get the minimum value in list
-            double Min = HistoryMinMaxPrice.Min();
-
-            Max = Math.Round((Max - Bars.ClosePrices.Last(9)) / Symbol.PipValue, 1);
-            Min = Math.Round((Min - Bars.ClosePrices.Last(9)) / Symbol.PipValue, 1);
-
-            
-            //Max is what percentage of StandardGain
-            double MaxPercentage = Math.Round(Max / StrandardGain, 2);
-            if (MaxPercentage > 1)
-            {
-                MaxPercentage = 1;
-            }
-
-            
-            //Min is what percentage of StandardGain
-            double MinPercentage = Math.Round(Min / StrandardGain, 2);
-            if (MinPercentage < -1)
-            {
-                MinPercentage = -1;
-            }
-
-
-            //if path not present create it
-            if (!System.IO.Directory.Exists(Folder))
-            {
-                System.IO.Directory.CreateDirectory(Folder);
-            }
-            ////write data to CSV
-            string FileNameX = Folder + "X.csv";
-            string FileNameY = Folder + "Y.csv";
-            
-            //Write to Y
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(FileNameY, true))
-            {
-                file.WriteLine(MinPercentage + "," + MaxPercentage);
-                file.Close();
-            }
-
             //Add Data from Indicators
             Data.Insert(0, Math.Round(_rsi.Result.Last(9), 2));
             Data.Insert(0, Math.Round((Bars.OpenPrices.Last(9) - _emaFast.Result.Last(9)) / Symbol.PipValue, 1));
             Data.Insert(0, Math.Round((Bars.OpenPrices.Last(9) - _emaSlow.Result.Last(9)) / Symbol.PipValue, 1));
             Data.Insert(0, Math.Round((_emaFast.Result.Last(9) - _emaSlow.Result.Last(9)) / Symbol.PipValue, 1));
-            //Print("RSI value: " + Math.Round(_rsi.Result.Last(9), 2));
-            //Print("EMA Fast value: " + Math.Round((Bars.OpenPrices.Last(9) - _emaFast.Result.Last(9)) / Symbol.PipValue, 1));
-            //Print("EMA Slow value: " + Math.Round((Bars.OpenPrices.Last(9) - _emaSlow.Result.Last(9)) / Symbol.PipValue, 1));
-            //Print("EMA Fast - EMA Slow value: " + Math.Round((_emaFast.Result.Last(9) - _emaSlow.Result.Last(9)) / Symbol.PipValue, 1));
+            Data.Insert(0, HistoryTrend(NoHistoryCandles, 8));
+            WriteToFile("X", Data);
+            return NoHistoryCandles;
+        }
 
+        //Function to Collect Y Data
+        public int CollectYData(int NoHistoryCandles)
+        {
+            List<double> Data = new List<double>();
+            Data.Add(HistoryTrend(1, NoHistoryCandles));
+            WriteToFile("Y", Data);
 
+            return 0;
+        }
 
-            // get lenght of list
-            int i = Data.Count - 1;
-
-            //Write to X
-            using (System.IO.StreamWriter file = new System.IO.StreamWriter(FileNameX, true))
+        //Function to Return Trend
+        public double HistoryTrend(int MinHistory, int MaxHistory)
+        {
+            List<double> HistoryMinMaxPrice = new List<double>();
+            int i = MaxHistory;
+            while (i > (MinHistory - 1))
             {
-                while (i > -1)
-                {
-                    if (i == 0)
-                    {
-                        file.Write(Data[i]);
-                    }
-                    else
-                    {
-                        file.Write(Data[i] + ",");
-                    }
-                    i--;
-                }
-                file.WriteLine();
-                file.Close();
-            }
+                HistoryMinMaxPrice.Add(Bars.HighPrices.Last(i));
+                HistoryMinMaxPrice.Add(Bars.LowPrices.Last(i));
 
-            //Stop the Robot
-            //Stop();
+                i--;
+            }
+            //get the maximum value in list
+            double Max = HistoryMinMaxPrice.Max();
+            Max = Math.Round((Max - Bars.OpenPrices.Last(MaxHistory)) / Symbol.PipValue, 1);
+            //get the minimum value in list
+            double Min = HistoryMinMaxPrice.Min();
+            Min = Math.Round((Min - Bars.OpenPrices.Last(MaxHistory)) / Symbol.PipValue, 1);
+
+            double MaxPips = BiggerPips(Min, Max);
+            double MaxPercentage = Math.Round((Max / MaxPips), 2);
+            double MinPercentage = Math.Round((Min / MaxPips), 2);
+            double Trend = MaxPercentage + MinPercentage;
+            return Trend;
+        }
+
+        public double BiggerPips(double Min, double Max)
+        {
+            if (Math.Abs(Min) > Math.Abs(Max))
+            {
+                return Math.Abs(Min);
+            }
+            else
+            {
+                return Math.Abs(Max);
+            }
         }
 
         protected override void OnStop()
