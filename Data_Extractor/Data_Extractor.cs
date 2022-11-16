@@ -150,7 +150,7 @@ namespace cAlgo.Robots
             double MaxPips = BiggerPips(Min, Max);
             double MaxPercentage = Math.Round((Max / MaxPips), 2);
             double MinPercentage = Math.Round((Min / MaxPips), 2);
-            double Trend = MaxPercentage + MinPercentage;
+            double Trend = Math.Round(MaxPercentage + MinPercentage, 2);
             return Trend;
         }
 
